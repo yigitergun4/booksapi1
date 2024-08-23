@@ -1,8 +1,14 @@
 .navbarBookSearcher {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   font-size: 20px;
+  background-color: "red";
+}
+.navbarBookSearcherInput {
+  position: absolute;
+  left: auto;
+  right: auto;
 }
 .divPagination {
   display: flex;
@@ -13,6 +19,24 @@
 .ellipsis {
   display: -webkit-box;
   max-width: 200px;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ellipsis-shopping-card-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ellipsis-shopping-card-description:hover {
+  white-space: normal;
+  overflow: scroll;
+  text-overflow: unset;
+}
+
+.ellipsisShoppingCard {
+  display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -30,6 +54,7 @@
   background-color: #e0e0e0;
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s linear;
 }
 .cardDetail {
   display: flex;
@@ -100,4 +125,17 @@
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   color: white;
+}
+.darktheme {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+}
+
+.search-input {
+  width: 400px;
+}
+.shoppingCardButtons {
+  color: "blue";
 }

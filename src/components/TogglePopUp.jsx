@@ -68,6 +68,7 @@ function TogglePopUp({ book, darkMode }) {
                       className="divAmount"
                       href={book?.saleInfo?.buyLink}
                       target="_blank"
+                      rel="noreferrer"
                       style={{
                         textDecoration: "none",
                         color: "inherit",
@@ -131,7 +132,10 @@ function TogglePopUp({ book, darkMode }) {
         onClick={open}
         variant="filled"
         className="buttonCardDetail"
-        style={{ backgroundColor: darkMode ? null : "rgb(43, 12, 30)" }}
+        style={{
+          backgroundColor: darkMode ? null : "rgb(43, 12, 30)",
+          transition: "all 0.3s linear",
+        }}
       >
         Book Detail
       </Button>

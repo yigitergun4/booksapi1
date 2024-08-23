@@ -1,40 +1,36 @@
-import React, { useEffect } from "react";
-import { TextInput, rem, Group, Button } from "@mantine/core";
+import React, { useContext, useEffect } from "react";
+import { rem, Group, Button } from "@mantine/core";
 import { useState } from "react";
 import { useElementSize } from "@mantine/hooks";
-import classes from "./classes.css";
-import searchIcons from "../images/search.png";
-import appcss from "../App.css";
 import DarkMode from "../components/DarkMode";
-import sortascending from "../images/sort-ascending.png";
-import sortdescending from "../images/sort-descending.png";
+import { IconSortDescending } from "@tabler/icons";
+import { IconSortAscending } from "@tabler/icons";
+import { UserContext } from "../Context/UserContext";
+import { IconShoppingCart, IconNotebook } from "@tabler/icons";
+import { Link } from "react-router-dom";
+import SearchInput from "../components/SearchInput";
+
 function Navbar(props) {
   const { ref } = useElementSize();
-  const [value, setValue] = useState("");
   const [darkMode, setdarkMode] = useState(true);
   const [sortData, setsortData] = useState("");
+  const { value, setValue, books } = useContext(UserContext);
 
+  useEffect(() => {
+    props.fromNavbartoApp(value);
+  }, [value]);
   useEffect(() => {
     props.fromNavbartoAppSort(sortData);
   }, [sortData, props]);
   useEffect(() => {
     props.fromNavbartoApp(darkMode);
+    localStorage.setItem("darkmode", darkMode);
   }, [darkMode, props]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setValue(e.target.value);
+  const onDataChange = (e) => {
+    setValue(e);
   };
-  const buttonInput = (
-    <Button
-      rightSection={<img src={searchIcons} height={20} alt="a"></img>}
-      variant="transparent"
-      onClick={() => (value ? props.moveData(value) : "")}
-      style={{ marginRight: 15 }}
-    />
-  );
   return (
-    <>
+    <UserContext.Provider value={{ value, books }}>
       <Group
         justify="center"
         ref={ref}
@@ -47,71 +43,104 @@ function Navbar(props) {
           borderBottom: "0.5px solid rgb(212, 212, 212)",
         }}
       >
-        <div className="navbarBookSearcher">
-          <a href="/" style={{ textDecoration: "none", color: "white" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <span>
+            <IconNotebook size={30} />
+          </span>
+          <a
+            href="/"
+            style={{
+              textDecoration: "none",
+              color: "white",
+              fontSize: rem(20),
+            }}
+          >
             Book Searcher
           </a>
         </div>
-        <div className="navbarBookSearcher">
-          <TextInput
-            placeholder="Search Books"
-            radius="md"
-            value={value}
-            ref={ref}
-            style={{ width: rem(500) }}
-            onChange={handleSubmit}
-            rightSection={buttonInput}
-            onKeyDown={(e) =>
-              e.key === "Enter" && value ? props.moveData(value) : null
-            }
-          />
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div className="navbarBookSearcherInput">
+            <SearchInput onDataChange={onDataChange} />
+          </div>
+          <div>
+            <Button
+              style={{
+                padding: 0,
+                position: "absolute",
+                right: 345,
+                top: 13,
+                zIndex: 1,
+                transition: "all 0.3s linear",
+              }}
+              variant="transparent"
+              color={darkMode ? "black" : "white"}
+              onClick={() =>
+                setsortData(
+                  sortData === ""
+                    ? "ascending"
+                    : sortData === "descending"
+                    ? "ascending"
+                    : ""
+                )
+              }
+            >
+              <IconSortAscending size={30} />
+            </Button>
+            <Button
+              style={{
+                padding: 0,
+                position: "absolute",
+                right: 375,
+                top: 13,
+                zIndex: 1,
+                transition: "all 0.3s linear",
+              }}
+              variant="transparent"
+              color={darkMode ? "black" : "white"}
+              onClick={() =>
+                setsortData(
+                  sortData === ""
+                    ? "descending"
+                    : sortData === "ascending"
+                    ? "descending"
+                    : ""
+                )
+              }
+            >
+              <IconSortDescending size={30} />
+            </Button>
+          </div>
+        </div>
+        <div className="darktheme">
+          <div style={{ position: "absolute", right: 200 }}>
+            <Link to="shopping-detail">
               <Button
-                style={{
-                  backgroundColor: darkMode ? null : "white",
-                  padding: 0,
-                  marginRight: 5,
-                }}
                 variant="transparent"
-                onClick={() =>
-                  setsortData(
-                    sortData === ""
-                      ? "ascending"
-                      : sortData === "descending"
-                      ? "ascending"
-                      : ""
-                  )
-                }
-              >
-                <img src={sortascending} height={20} alt=""></img>
-              </Button>
-              <Button
+                color={darkMode ? "black" : "white"}
                 style={{
-                  padding: 0,
-                  marginRight: 20,
-                  backgroundColor: darkMode ? null : "white",
+                  transition: "all 0.3s linear",
                 }}
-                variant="transparent"
-                onClick={() =>
-                  setsortData(
-                    sortData === ""
-                      ? "descending"
-                      : sortData === "ascending"
-                      ? "descending"
-                      : ""
-                  )
-                }
               >
-                <img src={sortdescending} height={20} alt=""></img>
+                <IconShoppingCart size={30} />
+                <span>{props.BookCounts}</span>
               </Button>
-            </div>
+            </Link>
+          </div>
+
+          <div>
             <DarkMode
               fromdarkModetoNavbar={(data) => {
                 setdarkMode(data);
@@ -120,7 +149,7 @@ function Navbar(props) {
           </div>
         </div>
       </Group>
-    </>
+    </UserContext.Provider>
   );
 }
 
