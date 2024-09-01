@@ -1,15 +1,77 @@
 .navbarBookSearcher {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   font-size: 20px;
-  background-color: "red";
 }
-.navbarBookSearcherInput {
-  position: absolute;
-  left: auto;
-  right: auto;
+.navbar-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 10px;
 }
+.navbar-container > a {
+  text-decoration: none;
+  color: white;
+  font-size: larger;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  white-space: nowrap;
+}
+.navbarBookSearcher > a {
+  text-decoration: none;
+  color: white;
+}
+.navbar-container > div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+@media (max-width: 992px) {
+  .navbar-container {
+    grid-template-columns: 1fr;
+  }
+  @media (max-width: 500px) {
+    .navbar-container {
+      grid-template-columns: 1fr;
+    }
+    .navbar-container > div:nth-child(2) {
+      grid-column: span 2;
+      justify-content: center;
+    }
+  }
+
+  .navbar-container > div:nth-child(3) {
+    grid-column: span 3;
+    justify-content: center;
+  }
+}
+@media (max-width: 768px) {
+  .navbar-container {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar-container > a {
+    justify-content: center;
+  }
+
+  .navbar-container > div {
+    justify-content: center;
+  }
+}
+.search-input {
+  @media (min-width: 768px) {
+    width: 550px;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-input {
+    max-width: 100%;
+  }
+}
+
 .divPagination {
   display: flex;
   justify-content: center;
@@ -34,7 +96,6 @@
   overflow: scroll;
   text-overflow: unset;
 }
-
 .ellipsisShoppingCard {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -42,19 +103,87 @@
   overflow: hidden;
 }
 .mediaCardToggle {
-  margin-top: 15px;
   position: relative;
 }
 .mediaCard {
-  margin-top: 15px;
   position: relative;
-  transition: all 0.5s ease;
+  transition: all 150ms ease-in-out;
 }
 .mediaCard:hover {
   background-color: #e0e0e0;
-  transform: scale(1.05);
+  transform: scale(103%);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: all 0.5s linear;
+  transition: all 150ms ease-in-out;
+}
+.customSelectDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+.darkModeComponent {
+  transition: "all 0.3s linear";
+  display: "flex";
+  align-items: "center";
+}
+.shoppingCardDetailBadges {
+  margin-top: 20px;
+  max-width: 100px;
+  margin-left: 15px;
+  transition: all 350ms ease;
+}
+.shoppingCardDetailCardDiv {
+  margin-top: 10px;
+  @media (min-width: 768px) {
+    margin-left: 15px;
+  }
+}
+
+.shoppingCardDetailCardDiv3 {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+.shoppingCardDetailCardDiv4 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shoppingCardDetailModalDiv {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+.shoppingCardDetailCard {
+  height: 250px;
+}
+.shoppingCardDetailBadges2 {
+  margin-top: 20px;
+  max-width: 100px;
+  margin-left: 60px;
+  transition: all 350ms ease;
+}
+
+.shoppingCardDetailDiv {
+  margin-top: 10px;
+  flex-grow: 1;
+}
+.shoppingCardDetailSpan {
+  color: black;
+}
+.shoppingCardDetailBuyButton {
+  width: 100%;
+  transition: all 0.3s linear;
+}
+.customSelectDivSelect {
+  border-radius: 12px;
+  border: "none";
+  margin: 0px;
+  font-family: "inherit";
+  font-size: "inherit";
+  cursor: "inherit";
+  line-height: "inherit";
 }
 .cardDetail {
   display: flex;
@@ -62,6 +191,51 @@
   align-items: center;
   width: 100%;
 }
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.summary-header h1 {
+  margin: 0;
+}
+
+.summary-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.buy-button {
+  width: 100%;
+}
+
 .typograph {
   font-weight: bold;
   position: absolute;
@@ -133,9 +307,6 @@
   position: relative;
 }
 
-.search-input {
-  width: 400px;
-}
 .shoppingCardButtons {
   color: "blue";
 }

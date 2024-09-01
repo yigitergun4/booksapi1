@@ -1,31 +1,15 @@
-import React from "react";
+import { useContext } from "react";
 import { UserContext } from "../Context/UserContext";
-
+import "../App.css";
 function CustomSelect() {
-  const { setpostsPerPage } = React.useContext(UserContext);
+  const { setpostsPerPage } = useContext(UserContext);
   return (
-    <div
-      style={{
-        marginLeft: 20,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <div className="customSelectDiv">
       <select
         name="per Page"
         onChange={(e) => setpostsPerPage(e.target.value)}
-        style={{
-          borderRadius: 12,
-          border: "none",
-          paddingLeft: 8,
-          margin: 0,
-          fontFamily: "inherit",
-          fontSize: "inherit",
-          cursor: "inherit",
-          lineHeight: "inherit",
-        }}
         defaultValue={"10"}
+        className="customSelectDivSelect"
       >
         <option value="5">5</option>
         <option value="10">10</option>

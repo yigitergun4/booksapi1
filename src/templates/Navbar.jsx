@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { rem, Group, Button } from "@mantine/core";
+import { Group, Button } from "@mantine/core";
 import { useState } from "react";
 import { useElementSize } from "@mantine/hooks";
 import DarkMode from "../components/DarkMode";
@@ -9,143 +9,100 @@ import { UserContext } from "../Context/UserContext";
 import { IconShoppingCart, IconNotebook } from "@tabler/icons";
 import { Link } from "react-router-dom";
 import SearchInput from "../components/SearchInput";
+import "../App.css";
 
 function Navbar(props) {
   const { ref } = useElementSize();
-  const [darkMode, setdarkMode] = useState(true);
+  const [darkMode, setdarkMode] = useState(
+    JSON.parse(localStorage.getItem("darkMode")) || true
+  );
   const [sortData, setsortData] = useState("");
   const { value, setValue, books } = useContext(UserContext);
-
-  useEffect(() => {
-    props.fromNavbartoApp(value);
-  }, [value]);
-  useEffect(() => {
-    props.fromNavbartoAppSort(sortData);
-  }, [sortData, props]);
-  useEffect(() => {
-    props.fromNavbartoApp(darkMode);
-    localStorage.setItem("darkmode", darkMode);
-  }, [darkMode, props]);
+  const handleSort = (type) => {
+    setsortData((prevSortData) => (prevSortData === type ? "" : type));
+  };
   const onDataChange = (e) => {
     setValue(e);
   };
+  const styleGroup = {
+    backgroundColor: darkMode ? null : "#27374D",
+    borderBottom: "0.5px solid rgb(212, 212, 212)",
+    marginBottom: "5px",
+  };
+  const styleButton = {
+    transition: "all 0.3s linear",
+    color: JSON.parse(localStorage.getItem("darkMode")) ? "black" : "white",
+  };
+  useEffect(() => {
+    props.fromNavbartoAppDarkMode(darkMode);
+  }, [darkMode, props]);
+  useEffect(() => {
+    props.fromNavbartoAppSort(sortData);
+  }, [sortData, props]);
   return (
     <UserContext.Provider value={{ value, books }}>
       <Group
         justify="center"
         ref={ref}
         align="center"
-        className={darkMode ? "demo" : "demoo"}
+        className={
+          JSON.parse(localStorage.getItem("darkMode")) ? "demo" : "demoo"
+        }
         grow
         preventGrowOverflow={false}
-        style={{
-          backgroundColor: darkMode ? null : "rgb(30, 30, 30)",
-          borderBottom: "0.5px solid rgb(212, 212, 212)",
-        }}
+        style={styleGroup}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <span>
+        <div className="navbar-container">
+          <a href="/">
             <IconNotebook size={30} />
-          </span>
-          <a
-            href="/"
-            style={{
-              textDecoration: "none",
-              color: "white",
-              fontSize: rem(20),
-            }}
-          >
             Book Searcher
           </a>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div className="navbarBookSearcherInput">
+          <div>
             <SearchInput onDataChange={onDataChange} />
           </div>
           <div>
-            <Button
-              style={{
-                padding: 0,
-                position: "absolute",
-                right: 345,
-                top: 13,
-                zIndex: 1,
-                transition: "all 0.3s linear",
-              }}
-              variant="transparent"
-              color={darkMode ? "black" : "white"}
-              onClick={() =>
-                setsortData(
-                  sortData === ""
-                    ? "ascending"
-                    : sortData === "descending"
-                    ? "ascending"
-                    : ""
-                )
-              }
-            >
-              <IconSortAscending size={30} />
-            </Button>
-            <Button
-              style={{
-                padding: 0,
-                position: "absolute",
-                right: 375,
-                top: 13,
-                zIndex: 1,
-                transition: "all 0.3s linear",
-              }}
-              variant="transparent"
-              color={darkMode ? "black" : "white"}
-              onClick={() =>
-                setsortData(
-                  sortData === ""
-                    ? "descending"
-                    : sortData === "ascending"
-                    ? "descending"
-                    : ""
-                )
-              }
-            >
-              <IconSortDescending size={30} />
-            </Button>
-          </div>
-        </div>
-        <div className="darktheme">
-          <div style={{ position: "absolute", right: 200 }}>
-            <Link to="shopping-detail">
+            <div>
               <Button
                 variant="transparent"
-                color={darkMode ? "black" : "white"}
-                style={{
-                  transition: "all 0.3s linear",
+                size="xs"
+                px={0}
+                py={0}
+                style={styleButton}
+                color={
+                  JSON.parse(localStorage.getItem("darkMode"))
+                    ? "black"
+                    : "white"
+                }
+                onClick={() => {
+                  handleSort("descending");
                 }}
               >
-                <IconShoppingCart size={30} />
-                <span>{props.BookCounts}</span>
+                <IconSortDescending size={30} />
               </Button>
-            </Link>
-          </div>
-
-          <div>
+              <Button
+                variant="transparent"
+                size="xs"
+                px={0}
+                py={0}
+                style={styleButton}
+                onClick={() => {
+                  handleSort("ascending");
+                }}
+              >
+                <IconSortAscending size={30} />
+              </Button>
+            </div>
             <DarkMode
               fromdarkModetoNavbar={(data) => {
                 setdarkMode(data);
               }}
             />
+            <Link to="shopping-detail">
+              <Button variant="transparent" style={styleButton}>
+                <IconShoppingCart size={30} />
+                <span>{props.BookCounts}</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </Group>

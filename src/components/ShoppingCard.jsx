@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ShoppingCardNavbar from "./ShoppingCardNavbar";
 import ShoppingCardDetail from "./ShoppingCardDetail";
 import { useContext } from "react";
@@ -9,7 +9,6 @@ function ShoppingCard() {
   const fromShoppingCardNavbarToApp = (darkMode) => {
     setdarkModeAppshel(darkMode);
   };
-
   return (
     <>
       <UserContext.Provider value={{ darkModeAppshel, setdarkModeAppshel }}>

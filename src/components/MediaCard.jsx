@@ -4,8 +4,8 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import appcss from "../App.css";
-import classescss from "../templates/classes.css";
+import "../App.css";
+import "../templates/classes.css";
 import TogglePopUp from "./TogglePopUp";
 import Tooltip from "@mui/material/Tooltip";
 import { Badge, Button } from "@mantine/core";
@@ -16,21 +16,9 @@ import {
 } from "@tabler/icons";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 export default function MediaCard({ book, darkMode, setBookCounts }) {
-  useEffect(() => {
-    const updateCartCount = () => {
-      const items = JSON.parse(localStorage.getItem("cartItems")) || [];
-      const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
-      setBookCounts(totalCount);
-    };
-
-    window.addEventListener("storage", updateCartCount);
-
-    return () => {
-      window.removeEventListener("storage", updateCartCount);
-    };
-  }, [setBookCounts]);
+  const items = JSON.parse(localStorage.getItem("cartItems")) || [];
+  const ItemCount = items.find((item) => item.id === book.id)?.quantity || 0;
   const notifyError = () =>
     toast.error("Selected book removed from basket", {
       position: "bottom-right",
@@ -38,7 +26,6 @@ export default function MediaCard({ book, darkMode, setBookCounts }) {
       closeOnClick: true,
       progress: undefined,
     });
-
   const updateCartCount = () => {
     const items = JSON.parse(localStorage.getItem("cartItems")) || [];
     const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
@@ -51,20 +38,14 @@ export default function MediaCard({ book, darkMode, setBookCounts }) {
       closeOnClick: true,
       progress: undefined,
     });
-
-  useEffect(() => {
-    window.addEventListener("storage", updateCartCount);
-    return () => {
-      window.removeEventListener("storage", updateCartCount);
-    };
-  }, []);
-
   const itemMinus = () => {
     let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
     const existingItem = cartItems.find((item) => item.id === book.id);
-    if (existingItem && existingItem.quantity >= 1) {
+    if (existingItem && existingItem.quantity > 1) {
       existingItem.quantity -= 1;
     } else if (existingItem && existingItem.quantity === 0) {
+      cartItems = cartItems.filter((item) => item.id !== book.id);
+    } else if (existingItem && existingItem.quantity === 1) {
       cartItems = cartItems.filter((item) => item.id !== book.id);
     }
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
@@ -72,14 +53,12 @@ export default function MediaCard({ book, darkMode, setBookCounts }) {
     if (cartItems.find((item) => item.id === book.id)) {
       notifyError();
     } else {
-      return;
+      notifyNotInBasket();
     }
   };
-
   const addtoLocalStorage = () => {
     let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
     const existingItem = cartItems.find((item) => item.id === book.id);
-
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
@@ -95,27 +74,53 @@ export default function MediaCard({ book, darkMode, setBookCounts }) {
       progress: undefined,
     });
   };
+  const styleButtonLeft = {
+    position: "absolute",
+    left: 5,
+    top: 5,
+    backgroundColor: darkMode ? null : "#526D82",
+    transition: "all 0.3s linear",
+  };
+  const styleButtonRight = {
+    position: "absolute",
+    right: 5,
+    top: 5,
+    backgroundColor: darkMode ? null : "#526D82",
+    transition: "all 0.3s linear",
+  };
+  const cardMediaSx = {
+    height: 200,
+    objectFit: "contain",
+  };
+  useEffect(() => {
+    const updateCartCount = () => {
+      const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
+      setBookCounts(totalCount);
+    };
+    window.addEventListener("storage", updateCartCount);
+    return () => {
+      window.removeEventListener("storage", updateCartCount);
+    };
+  }, [setBookCounts]);
+  useEffect(() => {
+    window.addEventListener("storage", updateCartCount);
+    return () => {
+      window.removeEventListener("storage", updateCartCount);
+    };
+  }, []);
   return (
     <div className="mediaCard">
       <Card key={book.id} variant="outlined">
         {book?.saleInfo?.buyLink ? (
           <>
-            <div
-              style={{
-                position: "absolute",
-              }}
-            >
+            <div>
               {book?.saleInfo?.saleability === "FOR_SALE" && (
                 <Button
                   radius="l"
                   size="xs"
                   onClick={itemMinus}
-                  style={{
-                    left: 5,
-                    top: 5,
-                    backgroundColor: darkMode ? null : "rgb(43, 12, 30)",
-                    transition: "all 0.3s linear",
-                  }}
+                  style={styleButtonLeft}
+                  disabled={ItemCount === 0}
                 >
                   <IconShoppingCartX size={20} />
                 </Button>
@@ -127,36 +132,10 @@ export default function MediaCard({ book, darkMode, setBookCounts }) {
                 radius="l"
                 size="xs"
                 onClick={addtoLocalStorage}
-                style={{
-                  position: "absolute",
-                  right: 5,
-                  top: 5,
-                  backgroundColor: darkMode ? null : "rgb(43, 12, 30)",
-                  transition: "all 0.3s linear",
-                }}
+                style={styleButtonRight}
               >
                 <IconShoppingCartPlus size={20} />
-              </Button>
-            )}
-            {book?.saleInfo?.saleability === "FREE" && (
-              <Button
-                radius="l"
-                size="xs"
-                style={{
-                  position: "absolute",
-                  right: 5,
-                  top: 5,
-                  backgroundColor: darkMode ? null : "rgb(43, 12, 30)",
-                  transition: "all 0.3s linear",
-                }}
-              >
-                <a
-                  href={book?.saleInfo?.buyLink}
-                  target="blank_"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Free
-                </a>
+                {ItemCount > 0 ? ItemCount : null}
               </Button>
             )}
           </>
@@ -164,12 +143,9 @@ export default function MediaCard({ book, darkMode, setBookCounts }) {
         {book?.volumeInfo?.imageLinks?.smallThumbnail ? (
           <CardMedia
             component="img"
-            sx={{ height: 200 }}
+            sx={cardMediaSx}
             image={book?.volumeInfo?.imageLinks?.smallThumbnail}
-            src="s"
-            style={{
-              objectFit: "contain",
-            }}
+            src="images"
           />
         ) : (
           <div className="imageBookDiv">
@@ -191,7 +167,6 @@ export default function MediaCard({ book, darkMode, setBookCounts }) {
               <div>{book?.volumeInfo?.title}</div>
             )}
           </Typography>
-
           <Typography
             variant="body2"
             color="text.secondary"
@@ -212,18 +187,13 @@ export default function MediaCard({ book, darkMode, setBookCounts }) {
                       variant={darkMode ? "gradient" : null}
                       gradient={{ from: "orange", to: "red", deg: 90 }}
                       radius="lg"
-                      color={darkMode ? null : "rgba(18, 7, 30, 0.2)"}
+                      color={darkMode ? null : "#DDE6ED"}
                     >
                       Stokta yok
                     </Badge>
                   )) ||
                   (book?.saleInfo?.saleability === "FREE" && (
-                    <Badge
-                      variant={darkMode ? "gradient" : null}
-                      gradient={{ from: "lime", to: "green", deg: 90 }}
-                      radius="lg"
-                      color={darkMode ? null : "rgb(43, 12, 30)"}
-                    >
+                    <Badge radius="lg" color={darkMode ? "green" : "#526D82"}>
                       Free
                     </Badge>
                   ))}

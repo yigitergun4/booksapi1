@@ -1,16 +1,23 @@
 import React, { useState } from "react";
-import appcss from "../App.css";
-import { TextInput } from "@mantine/core";
+import "../App.css";
+import { TextInput, Button } from "@mantine/core";
 import { IconSearch } from "@tabler/icons";
-
 function SearchInput({ onDataChange }) {
   const [data, setData] = useState("");
-
   const handleInputChange = (e) => {
     setData(e.target.value);
-    onDataChange(e.target.value);
   };
-
+  const handleSearch = () => {
+    onDataChange(data);
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+  const styleButton = {
+    padding: "0px",
+  };
   return (
     <TextInput
       type="text"
@@ -18,7 +25,16 @@ function SearchInput({ onDataChange }) {
       onChange={handleInputChange}
       placeholder="Please enter a book or author..."
       className="search-input"
-      rightSection={<IconSearch color="black" />}
+      onKeyDown={handleKeyDown}
+      rightSection={
+        <Button
+          onClick={handleSearch}
+          variant="transparent"
+          style={styleButton}
+        >
+          <IconSearch color={"black"} />
+        </Button>
+      }
     />
   );
 }
