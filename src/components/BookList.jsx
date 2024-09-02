@@ -6,7 +6,6 @@ import CustomPagination from "../components/CustomPagination";
 import CustomSelect from "../components/CustomSelect";
 import { useState, useEffect } from "react";
 import "../App.css";
-import "../templates/classes.css";
 import { UserContext } from "../Context/UserContext";
 
 function BookList() {
@@ -22,8 +21,6 @@ function BookList() {
   const lastPostIndex = page * postsPerPage;
   const firstPostsIndex = lastPostIndex - postsPerPage;
   const books = data?.items?.slice(firstPostsIndex, lastPostIndex) || [];
-
-  const baseURL = `https://www.googleapis.com/books/v1/volumes?q=${value}&key=${process.env.REACT_APP_API_KEY}&maxResults=40&orderBy=relevance`;
   const [BookCounts, setBookCounts] = useState(
     JSON.parse(localStorage.getItem("cartItems"))?.reduce(
       (total, item) => total + item.quantity,
@@ -42,6 +39,7 @@ function BookList() {
       ? priceA - priceB
       : null;
   });
+
   useEffect(() => {
     fromNavbartoAppDarkMode(darkMode);
   }, [darkMode]);
@@ -52,16 +50,20 @@ function BookList() {
     setPage(p);
   };
   useEffect(() => {
-    fetch(baseURL)
-      .then((response) => response.json())
-      .then((data) => {
+    try {
+      const fetchData = async () => {
+        const response = await fetch(
+          `https://www.googleapis.com/books/v1/volumes?q=${value}&maxResults=40`
+        );
+        const data = await response.json();
         setData(data);
         setLoading(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [baseURL]);
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [value]);
   const styleDiv = {
     backgroundColor: darkMode ? null : "#27374D",
     transition: "all 0.3s linear",

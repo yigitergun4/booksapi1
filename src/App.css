@@ -138,6 +138,25 @@
     margin-left: 15px;
   }
 }
+.demo {
+  background-color: #467fe9;
+  color: var(--mantine-color-white);
+  padding: var(--mantine-spacing-md);
+  text-align: center;
+
+  @media (min-width: em(750px)) {
+    background-color: var(--mantine-color-red-filled);
+  }
+}
+.demoo {
+  color: var(--mantine-color-white);
+  padding: var(--mantine-spacing-md);
+  text-align: center;
+
+  @media (min-width: em(750px)) {
+    background-color: var(--mantine-color-red-filled);
+  }
+}
 
 .shoppingCardDetailCardDiv3 {
   display: flex;
@@ -148,6 +167,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.NoItemsInCartDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
 }
 .shoppingCardDetailModalDiv {
   display: flex;

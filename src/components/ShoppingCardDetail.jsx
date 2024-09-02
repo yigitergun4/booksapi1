@@ -195,6 +195,9 @@ function ShoppingCardDetail() {
   const styleBadges = {
     transition: "all 0.3s linear",
   };
+  const NoItemsInCartDiv = {
+    backgroundColor: darkMode ? null : "#27374D",
+  };
   useEffect(() => {
     const totalCount = cartItems.reduce((acc, book) => {
       return acc + book.quantity;
@@ -408,15 +411,7 @@ function ShoppingCardDetail() {
       </Flex>
     </div>
   ) : (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100%",
-      }}
-    >
+    <div className="NoItemsInCartDiv" style={NoItemsInCartDiv}>
       <Card
         shadow="xl"
         padding="lg"
@@ -425,13 +420,7 @@ function ShoppingCardDetail() {
         withBorder
         style={{ height: 250 }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
+        <div>
           <div>
             {localStorage.getItem("cartItems") ? (
               <Button color="red" onClick={clearBasket}>
@@ -441,25 +430,10 @@ function ShoppingCardDetail() {
           </div>
           <h1>Shopping Basket</h1>
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
-            width: "100%",
-          }}
-        >
-          <Text fw={700}>Total amount: {formattedAmount}</Text>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
 
-            width: "100%",
-          }}
-        >
+        <div className="NoItemsInCartDiv">
+          <Text fw={700}>Total amount: {formattedAmount}</Text>
+
           {cartItems.length === 0 ? (
             <Text fw={300}>No items in the cart</Text>
           ) : (

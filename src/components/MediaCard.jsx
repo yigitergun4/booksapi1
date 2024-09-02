@@ -5,7 +5,6 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import "../App.css";
-import "../templates/classes.css";
 import TogglePopUp from "./TogglePopUp";
 import Tooltip from "@mui/material/Tooltip";
 import { Badge, Button } from "@mantine/core";
@@ -19,6 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function MediaCard({ book, darkMode, setBookCounts }) {
   const items = JSON.parse(localStorage.getItem("cartItems")) || [];
   const ItemCount = items.find((item) => item.id === book.id)?.quantity || 0;
+  const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
   const notifyError = () =>
     toast.error("Selected book removed from basket", {
       position: "bottom-right",
@@ -94,20 +94,13 @@ export default function MediaCard({ book, darkMode, setBookCounts }) {
   };
   useEffect(() => {
     const updateCartCount = () => {
-      const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
       setBookCounts(totalCount);
     };
     window.addEventListener("storage", updateCartCount);
     return () => {
       window.removeEventListener("storage", updateCartCount);
     };
-  }, [setBookCounts]);
-  useEffect(() => {
-    window.addEventListener("storage", updateCartCount);
-    return () => {
-      window.removeEventListener("storage", updateCartCount);
-    };
-  }, []);
+  }, [totalCount, setBookCounts]);
   return (
     <div className="mediaCard">
       <Card key={book.id} variant="outlined">

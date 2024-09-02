@@ -26,7 +26,6 @@ function Navbar(props) {
   };
   const styleGroup = {
     backgroundColor: darkMode ? null : "#27374D",
-    borderBottom: "0.5px solid rgb(212, 212, 212)",
     marginBottom: "5px",
   };
   const styleButton = {
