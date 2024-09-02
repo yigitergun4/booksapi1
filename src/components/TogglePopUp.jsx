@@ -17,25 +17,12 @@ function TogglePopUp({ book }) {
   );
   const ItemCount =
     cartItems.find((item) => item.id === book.id)?.quantity || 0;
-  const [BookCounts, setBookCounts] = useState(
-    JSON.parse(localStorage.getItem("cartItems"))?.reduce(
-      (total, item) => total + item.quantity,
-      0
-    ) || 0
-  );
-  useEffect(() => {
-    const updateCartCount = () => {
-      const totalCount = cartItems.reduce(
-        (acc, item) => acc + item.quantity,
-        0
-      );
-      setBookCounts(totalCount);
-    };
-    window.addEventListener("storage", updateCartCount);
-    return () => {
-      window.removeEventListener("storage", updateCartCount);
-    };
-  }, [cartItems, setBookCounts]);
+  const styleBookDetailButton = {
+    backgroundColor: JSON.parse(localStorage.getItem("darkMode"))
+      ? null
+      : "#526D82",
+    transition: "all 0.3s linear",
+  };
   return (
     <>
       <Modal
@@ -94,11 +81,6 @@ function TogglePopUp({ book }) {
                           href={book?.saleInfo?.buyLink}
                           target="_blank"
                           rel="noreferrer"
-                          style={{
-                            textDecoration: "none",
-                            color: "inherit",
-                            fontWeight: "bold",
-                          }}
                         >
                           {book?.saleInfo?.listPrice?.amount ? (
                             <div>{`${book?.saleInfo?.listPrice?.amount}₺`}</div>
@@ -164,19 +146,9 @@ function TogglePopUp({ book }) {
                   gutterBottom
                   variant="h5"
                   component="div"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
+                  className="amountAuthors"
                 >
-                  <div
-                    style={{
-                      fontSize: 20,
-                    }}
-                  >
-                    {book?.volumeInfo?.title}
-                  </div>
+                  <div>{book?.volumeInfo?.title}</div>
                   <div
                     style={{
                       fontSize: 20,
@@ -200,12 +172,7 @@ function TogglePopUp({ book }) {
         onClick={open}
         variant="filled"
         className="buttonCardDetail"
-        style={{
-          backgroundColor: JSON.parse(localStorage.getItem("darkMode"))
-            ? null
-            : "#526D82",
-          transition: "all 0.3s linear",
-        }}
+        style={styleBookDetailButton}
       >
         Book Detail
       </Button>
